@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getEvents } from "../api";
 import { Link } from "react-router-dom";
-import flowerImage from "../assets/images/flower.jpg";
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);
@@ -31,7 +30,7 @@ const HomePage = () => {
             <Link to={`/events/${event.id}`} className="card-link">
               <div className="card">
                 <img
-                  src={event.image ? event.image : { flowerImage }}
+                  src={event.image ? event.image : "/images/flower.jpg"}
                   className="card-img-top"
                   alt={event.title}
                 />

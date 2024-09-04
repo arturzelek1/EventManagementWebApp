@@ -41,7 +41,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # * User registration API view
-#
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
 
