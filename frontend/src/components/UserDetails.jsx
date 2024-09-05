@@ -2,25 +2,36 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Cookies from "js-cookie";
 
 const UserDetailPage = () => {
   const { userId } = useParams(); // Zakładamy, że userId jest przekazywane w parametrach URL
   const [user, setUser] = useState(null);
   const [eventsJoined, setEventsJoined] = useState([]);
   const [error, setError] = useState(null);
+  const csrfToken = Cookies.get("csrftoken");
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // Pobranie danych o użytkowniku
         const userResponse = await axios.get(
-          `http://localhost:8000/api/users/${userId}/`
+          `http://localhost:8000/api/users-details/${userId}`,
+          {
+            headers: { "X-CSRFToken": csrfToken },
+            withCredentials: true,
+          }
         );
         setUser(userResponse.data);
 
         const eventsResponse = await axios.get(
-          `http://localhost:8000/api/users/${userId}/events/`
+          `http://localhost:8000/api/users-details/${userId}`,
+          {
+            headers: { "X-CSRFToken": csrfToken },
+            withCredentials: true,
+          }
         );
-        setEventsJoined(eventsResponse.data);
+        setEventsJoined(eventsResponse.data.registered_events);
       } catch (error) {
         console.error("Error fetching user data:", error);
         setError("Failed to load user details.");
@@ -28,7 +39,7 @@ const UserDetailPage = () => {
     };
 
     fetchUserData();
-  }, [userId]);
+  }, [csrfToken, userId]);
 
   if (error) return <div className="alert alert-danger">{error}</div>;
 
@@ -46,9 +57,9 @@ const UserDetailPage = () => {
       <h2>Events Joined:</h2>
       <ul className="list-group">
         {eventsJoined.length > 0 ? (
-          eventsJoined.map((registration) => (
-            <li key={registration.event_ID} className="list-group-item">
-              {registration.event_ID.title}
+          eventsJoined.map((event) => (
+            <li key={event.event_ID} className="list-group-item">
+              {event.title}
             </li>
           ))
         ) : (

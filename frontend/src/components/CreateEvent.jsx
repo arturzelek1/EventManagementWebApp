@@ -2,8 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Cookies from "js-cookie";
 
 const CreateEvent = () => {
+  const csrfToken = Cookies.get("csrftoken");
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
@@ -43,18 +45,24 @@ const CreateEvent = () => {
 
     const formToSubmit = new FormData();
     for (const key in formData) {
-      formToSubmit.append(key, formData[key]);
+      if (formData[key] !== null) {
+        formToSubmit.append(key, formData[key]);
+      }
     }
 
     try {
       await axios.post("http://localhost:8000/api/events/", formToSubmit, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "X-CSRFToken": csrfToken,
         },
+        withCredentials: true,
       });
-      navigate("/admin_dashboard"); // Przekierowanie po udanym utworzeniu
+      navigate("/admin_dashboard");
     } catch (error) {
-      console.error("Error creating event:", error);
+      console.error(
+        "Error creating event:",
+        error.response ? error.response.data : error.message
+      );
       setError("Error creating event");
     }
   };
@@ -150,8 +158,8 @@ const CreateEvent = () => {
             required
           >
             <option value="">Select Status</option>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
+            <option value="Draft">Draft</option>
+            <option value="Published">Published</option>
           </select>
         </div>
 

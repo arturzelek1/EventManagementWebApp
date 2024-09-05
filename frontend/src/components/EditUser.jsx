@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Cookies from "js-cookie";
 
 const EditUser = () => {
   const { userId } = useParams(); // Pobieramy ID użytkownika z URL
@@ -10,6 +11,7 @@ const EditUser = () => {
     username: "",
     email: "",
   });
+  const csrfToken = Cookies.get("csrftoken");
   const [error, setError] = useState(null);
 
   // Funkcja do pobierania danych użytkownika z API
@@ -17,7 +19,11 @@ const EditUser = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/users/${userId}/`
+          `http://localhost:8000/api/users/${userId}/`,
+          {
+            headers: { "X-CSRFToken": csrfToken },
+            withCredentials: true,
+          }
         );
         setFormData(response.data);
       } catch (error) {
@@ -27,7 +33,7 @@ const EditUser = () => {
     };
 
     fetchUser();
-  }, [userId]);
+  }, [csrfToken, userId]);
 
   // Funkcja obsługująca zmianę wartości w polach formularza
   const handleChange = (e) => {
@@ -43,7 +49,7 @@ const EditUser = () => {
     e.preventDefault();
 
     try {
-      await axios.put(`/api/users/${userId}/`, formData);
+      await axios.put(`http://localhost:8000/api/users/${userId}/`, formData);
       navigate("/admin_dashboard"); // Przekierowanie po udanej aktualizacji
     } catch (error) {
       console.error("Error updating user:", error);

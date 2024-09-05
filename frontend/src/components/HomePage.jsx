@@ -31,7 +31,7 @@ const HomePage = () => {
       <div className="row">
         {events.map((event) => (
           <div key={event.id} className="col-lg-4 mb-4">
-            <Link to={`/events/${event.id}`} className="card-link">
+            <Link to={`/events/${event.event_ID}`} className="card-link">
               <div className="card">
                 <img
                   src={event.image ? event.image : "/images/flower.jpg"}

@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Cookies from "js-cookie";
 
 const EditEvent = () => {
   const { eventId } = useParams(); // Pobieramy ID wydarzenia z URL
   const navigate = useNavigate();
+  const csrfToken = Cookies.get("csrftoken");
   const [formData, setFormData] = useState({
     title: "",
     date: "",
@@ -25,7 +27,11 @@ const EditEvent = () => {
     const fetchEvent = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/events/${eventId}/`
+          `http://localhost:8000/api/events/${eventId}/`,
+          {
+            headers: { "X-CSRFToken": csrfToken },
+            withCredentials: true,
+          }
         );
         setFormData(response.data);
       } catch (error) {
@@ -35,7 +41,7 @@ const EditEvent = () => {
     };
 
     fetchEvent();
-  }, [eventId]);
+  }, [eventId, csrfToken]);
 
   // Funkcja obsługująca zmianę wartości w polach formularza
   const handleChange = (e) => {

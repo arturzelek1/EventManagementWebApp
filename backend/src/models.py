@@ -48,10 +48,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class EventStatus(Enum):
-    PLANNED = "Planned"
-    DURING = "During"
-    FINISHED = "Finished"
-    CANCELLED = "Cancelled"
+    DRAFT = "Draft"
+    PUBLISHED = "Published"
+
+
+##class EventStatus(Enum):
+##    PLANNED = "Planned"
+##    DURING = "During"
+##    FINISHED = "Finished"
+##    CANCELLED = "Cancelled"
 
 
 class Event(models.Model):

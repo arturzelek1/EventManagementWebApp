@@ -9,6 +9,7 @@ from .views import (
     JoinEventView,
     LeaveEventView,
     UserDetail,
+    UserDetailById,
 )
 
 urlpatterns = [
@@ -30,4 +31,5 @@ urlpatterns = [
         "events/<int:event_id>/leave/", LeaveEventView.as_view(), name="api-leave-event"
     ),
     path("user/", UserDetail.as_view(), name="user-detail"),
+    path("users-details/<int:user_id>", UserDetailById.as_view(), name="users-details"),
 ]

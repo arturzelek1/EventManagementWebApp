@@ -1,59 +1,71 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-//import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const EventDetail = () => {
-  const { eventId } = useParams(); // Pobieramy ID wydarzenia z URL
-  //const navigate = useNavigate();
+  const { eventId } = useParams(); // Get event ID from URL
   const [event, setEvent] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
+  const csrfToken = Cookies.get("csrftoken");
 
-  // Funkcja do pobierania danych wydarzenia z API
-  useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/api/events/${eventId}/`
+  // Function to fetch event data
+  const fetchEvent = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/events/${eventId}/`,
+        {
+          headers: { "X-CSRFToken": csrfToken },
+          withCredentials: true,
+        }
+      );
+      setEvent(response.data);
+      setIsRegistered(response.data.is_registered);
+    } catch (error) {
+      console.error("Error fetching event data:", error);
+      setError("Error fetching event data");
+    }
+  }, [eventId, csrfToken]);
+
+  // Function to handle event join and leave actions
+  const handleEventAction = async (action) => {
+    console.log(`Handling ${action} for event ${eventId}`);
+    try {
+      if (action === "join") {
+        await axios.post(
+          `http://localhost:8000/api/events/${eventId}/join/`,
+          null,
+          {
+            headers: { "X-CSRFToken": csrfToken },
+            withCredentials: true,
+          }
         );
-        setEvent(response.data);
-        // Zakładamy, że odpowiedź zawiera informację, czy użytkownik jest zarejestrowany
-        setIsRegistered(response.data.is_registered);
-      } catch (error) {
-        console.error("Error fetching event data:", error);
-        setError("Error fetching event data");
+        setIsRegistered(true);
+        setSuccessMessage("Successfully joined the event!");
+      } else if (action === "leave") {
+        await axios.post(
+          `http://localhost:8000/api/events/${eventId}/leave/`,
+          null,
+          {
+            headers: { "X-CSRFToken": csrfToken },
+            withCredentials: true,
+          }
+        );
+        setIsRegistered(false);
+        setSuccessMessage("Successfully left the event!");
       }
-    };
+    } catch (error) {
+      console.error(`Error ${action} event:`, error);
+      setError(`Error ${action} the event`);
+    }
+  };
 
+  useEffect(() => {
     fetchEvent();
-  }, [eventId]);
-
-  // Funkcja do obsługi dołączania do wydarzenia
-  const handleJoin = async () => {
-    try {
-      await axios.post(`/api/events/${eventId}/join/`);
-      setIsRegistered(true);
-      setSuccessMessage("Successfully joined the event!");
-    } catch (error) {
-      console.error("Error joining event:", error);
-      setError("Error joining the event");
-    }
-  };
-
-  // Funkcja do obsługi opuszczania wydarzenia
-  const handleLeave = async () => {
-    try {
-      await axios.post(`/api/events/${eventId}/leave/`);
-      setIsRegistered(false);
-      setSuccessMessage("Successfully left the event!");
-    } catch (error) {
-      console.error("Error leaving event:", error);
-      setError("Error leaving the event");
-    }
-  };
+  }, [fetchEvent]);
 
   if (error) return <div className="alert alert-danger">{error}</div>;
   if (!event) return <div>Loading...</div>;
@@ -81,11 +93,17 @@ const EventDetail = () => {
           )}
 
           {isRegistered ? (
-            <button onClick={handleLeave} className="btn btn-danger">
+            <button
+              onClick={() => handleEventAction("leave")}
+              className="btn btn-danger"
+            >
               Leave Event
             </button>
           ) : (
-            <button onClick={handleJoin} className="btn btn-success">
+            <button
+              onClick={() => handleEventAction("join")}
+              className="btn btn-success"
+            >
               Join Event
             </button>
           )}

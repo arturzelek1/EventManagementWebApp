@@ -38,6 +38,7 @@ from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # * User views
+User = get_user_model()
 
 
 # * User registration API view
@@ -74,6 +75,26 @@ class UserLogin(APIView):
 
 
 # * Details about logged user
+class UserDetailById(APIView):
+    permission_classes = (permissions.IsAdminUser,)  # Adjust as necessary
+
+    def get(self, request, user_id):
+        user = get_object_or_404(User, pk=user_id)
+        registered_events = Event_Registration.objects.filter(
+            user_ID=user
+        ).select_related("event_ID")
+        events_data = EventSerializer(
+            [registration.event_ID for registration in registered_events], many=True
+        ).data
+
+        user_data = {
+            "username": user.username,
+            "email": user.email,
+            "registered_events": events_data,
+        }
+        return Response(user_data, status=status.HTTP_200_OK)
+
+
 class UserDetail(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -83,7 +104,6 @@ class UserDetail(APIView):
         registered_events = Event_Registration.objects.filter(user_ID=user).values_list(
             "event_ID", flat=True
         )
-
         user_data = {
             "username": user.username,
             "isAuthenticated": True,
@@ -135,6 +155,11 @@ class UserView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        user = get_object_or_404(get_user_model(), pk=pk)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # * AdminDashboard API view

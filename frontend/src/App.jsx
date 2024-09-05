@@ -20,13 +20,13 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/admin_dashboard" element={<AdminDashboard />} />
         <Route path="/create_event" element={<CreateEvent />} />
-        <Route path="/events/edit/:eventId" element={<EditEvent />} />
-        <Route path="/users/edit/:userId" element={<EditUser />} />
+        <Route path="/edit_event/:eventId" element={<EditEvent />} />
+        <Route path="/edit_user/:userId" element={<EditUser />} />
         <Route path="/events/:eventId" element={<EventDetail />} />
         <Route path="/events" element={<EventsList />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/users/:userId" element={<UserDetailPage />} />
+        <Route path="/users_details/:userId" element={<UserDetailPage />} />
         <Route path="/users" element={<UserListPage />} />
         {/* Add routes for other components */}
       </Routes>
