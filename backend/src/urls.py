@@ -10,6 +10,7 @@ from .views import (
     LeaveEventView,
     UserDetail,
     UserDetailById,
+    EventSearchAPIView,
 )
 
 urlpatterns = [
@@ -32,4 +33,5 @@ urlpatterns = [
     ),
     path("user/", UserDetail.as_view(), name="user-detail"),
     path("users-details/<int:user_id>", UserDetailById.as_view(), name="users-details"),
+    path("events/search/", EventSearchAPIView.as_view(), name="event_search_api"),
 ]

@@ -1,22 +1,25 @@
+// src/components/Navbar.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useSearch } from "../components/SearchContext"; // Import useSearch
 import "../styles/Navbar.css";
 import "../styles/bootstrap.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Cookies from "js-cookie";
 
 function Navbar() {
   const [user, setUser] = useState(null);
   const csrfToken = Cookies.get("csrftoken");
   const navigate = useNavigate();
+  const { searchQuery, setSearchQuery } = useSearch(); // Use context
 
   const handleLogout = () => {
     axios
       .post("http://localhost:8000/api/logout/", {}, { withCredentials: true })
       .then(() => {
         setUser(null);
-        navigate("/"); // Przekierowanie za pomocą React Router
+        navigate("/"); // Redirect using React Router
       })
       .catch((error) => {
         console.error("Error logging out:", error);
@@ -37,7 +40,6 @@ function Navbar() {
         withCredentials: true,
       })
       .then((response) => {
-        console.log("User data received:", response.data);
         setUser(response.data);
       })
       .catch((error) => {
@@ -88,15 +90,16 @@ function Navbar() {
               </>
             )}
           </ul>
-          <form className="form-inline" method="get" action="/">
+          <form className="form-inline">
             <input
               className="form-control mr-sm-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
-              name="q"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="btn btn-pink my-2 my-sm-0" type="submit">
+            <button className="btn btn-pink my-2 my-sm-0" type="button">
               Search
             </button>
           </form>

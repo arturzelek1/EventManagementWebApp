@@ -36,6 +36,8 @@ from django.views import View
 from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import generics
+
 
 # * User views
 User = get_user_model()
@@ -264,3 +266,19 @@ class LeaveEventView(APIView):
             {"message": f"You have been written out of the event: {event.title}"},
             status=status.HTTP_200_OK,
         )
+
+
+class EventSearchAPIView(generics.ListAPIView):
+    serializer_class = EventSerializer
+    permission_classes = permissions.AllowAny
+
+    def get_queryset(self):
+        query = self.request.GET.get("q", "")
+        if query:
+
+            return Event.objects.filter(
+                Q(title__icontains=query)
+                | Q(description__icontains=query)
+                | Q(location__icontains=query)
+            )
+        return Event.objects.none()

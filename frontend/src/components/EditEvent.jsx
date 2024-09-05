@@ -66,16 +66,23 @@ const EditEvent = () => {
 
     const formToSubmit = new FormData();
     for (const key in formData) {
-      formToSubmit.append(key, formData[key]);
+      if (formData[key] !== null && formData[key] !== "") {
+        formToSubmit.append(key, formData[key]);
+      }
     }
 
     try {
-      await axios.put(`/api/events/${eventId}/`, formToSubmit, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      navigate("/admin_dashboard"); // Przekierowanie po udanej aktualizacji
+      await axios.put(
+        `http://localhost:8000/api/events/${eventId}/`,
+        formToSubmit,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-CSRFToken": csrfToken,
+          },
+        }
+      );
+      navigate("/admin_dashboard");
     } catch (error) {
       console.error("Error updating event:", error);
       setError("Error updating event");
@@ -173,8 +180,8 @@ const EditEvent = () => {
             required
           >
             <option value="">Select Status</option>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
+            <option value="Draft">Draft</option>
+            <option value="Published">Published</option>
           </select>
         </div>
 
