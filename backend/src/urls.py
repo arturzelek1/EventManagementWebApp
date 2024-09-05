@@ -8,6 +8,7 @@ from .views import (
     EventListView,
     JoinEventView,
     LeaveEventView,
+    UserDetail,
 )
 
 urlpatterns = [
@@ -24,6 +25,9 @@ urlpatterns = [
     path("events/", EventListView.as_view(), name="api-events"),
     path("events/<int:event_id>/", EventListView.as_view(), name="api-event-detail"),
     # Event participation
-    path("events/<int:pk>/join/", JoinEventView.as_view(), name="api-join-event"),
-    path("events/<int:pk>/leave/", LeaveEventView.as_view(), name="api-leave-event"),
+    path("events/<int:event_id>/join/", JoinEventView.as_view(), name="api-join-event"),
+    path(
+        "events/<int:event_id>/leave/", LeaveEventView.as_view(), name="api-leave-event"
+    ),
+    path("user/", UserDetail.as_view(), name="user-detail"),
 ]

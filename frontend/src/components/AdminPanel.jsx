@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -11,7 +12,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("/api/admin-dashboard/"); // Ścieżka do API użytkowników
+        const response = await axios.get(
+          "http://localhost:8000/api/admin-dashboard/"
+        ); // Ścieżka do API użytkowników
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -21,7 +24,7 @@ const AdminDashboard = () => {
 
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("/api/events/"); // Ścieżka do API wydarzeń
+        const response = await axios.get("http://localhost:8000/api/events/"); // Ścieżka do API wydarzeń
         setEvents(response.data);
       } catch (error) {
         console.error("Error fetching events:", error);

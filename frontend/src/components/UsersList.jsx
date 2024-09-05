@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const UserListPage = () => {
   const [users, setUsers] = useState([]);
@@ -8,7 +9,7 @@ const UserListPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("/api/users/");
+        const response = await axios.get("http://localhost:8000/api/users/");
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);

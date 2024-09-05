@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const UserDetailPage = () => {
   const { userId } = useParams(); // Zakładamy, że userId jest przekazywane w parametrach URL
@@ -11,10 +12,14 @@ const UserDetailPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userResponse = await axios.get(`/api/users/${userId}/`);
+        const userResponse = await axios.get(
+          `http://localhost:8000/api/users/${userId}/`
+        );
         setUser(userResponse.data);
 
-        const eventsResponse = await axios.get(`/api/users/${userId}/events/`);
+        const eventsResponse = await axios.get(
+          `http://localhost:8000/api/users/${userId}/events/`
+        );
         setEventsJoined(eventsResponse.data);
       } catch (error) {
         console.error("Error fetching user data:", error);

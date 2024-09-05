@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const EditEvent = () => {
   const { eventId } = useParams(); // Pobieramy ID wydarzenia z URL
@@ -23,7 +24,9 @@ const EditEvent = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await axios.get(`/api/events/${eventId}/`);
+        const response = await axios.get(
+          `http://localhost:8000/api/events/${eventId}/`
+        );
         setFormData(response.data);
       } catch (error) {
         console.error("Error fetching event data:", error);

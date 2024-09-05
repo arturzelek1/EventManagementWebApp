@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -9,21 +11,35 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Retrieve CSRF token from cookies
+  const csrfToken = Cookies.get("csrftoken");
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      //const resonse = await axios...
-      await axios.post("/api/login/", {
-        username,
-        email,
-        password,
-      });
+      // Send login request with CSRF token in headers
+      await axios.post(
+        "http://localhost:8000/api/login/",
+        {
+          username,
+          email,
+          password,
+        },
+        {
+          headers: {
+            "X-CSRFToken": csrfToken, // Add CSRF token to headers
+          },
+          withCredentials: true, // Make sure cookies are sent with request
+        }
+      );
 
-      // Assuming successful login redirects to home or some other page
-      navigate("/"); // Redirect to home or dashboard page
+      // Redirect to home or dashboard page on successful login
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error);
+      console.log("Sending login data:", { username, email, password });
+      console.log("CSRF Token:", csrfToken);
       setError("Invalid username, email, or password.");
     }
   };

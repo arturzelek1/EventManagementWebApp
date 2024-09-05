@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { getEvents } from "../api";
 import { Link } from "react-router-dom";
+import "../styles/HomePage.css";
+import "../styles/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);

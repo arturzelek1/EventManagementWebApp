@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 //import { useNavigate } from "react-router-dom";
 
 const EventDetail = () => {
@@ -15,7 +16,9 @@ const EventDetail = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await axios.get(`/api/events/${eventId}/`);
+        const response = await axios.get(
+          `http://localhost:8000/api/events/${eventId}/`
+        );
         setEvent(response.data);
         // Zakładamy, że odpowiedź zawiera informację, czy użytkownik jest zarejestrowany
         setIsRegistered(response.data.is_registered);

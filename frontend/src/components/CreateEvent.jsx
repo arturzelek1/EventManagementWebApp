@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const CreateEvent = () => {
     }
 
     try {
-      await axios.post("/api/events/", formToSubmit, {
+      await axios.post("http://localhost:8000/api/events/", formToSubmit, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

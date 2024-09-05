@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
@@ -14,7 +15,7 @@ const RegisterPage = () => {
 
     try {
       //const resonse = await axios...
-      await axios.post("/api/register/", {
+      await axios.post("http://localhost:8000/api/register/", {
         username,
         email,
         password,

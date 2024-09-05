@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const EditUser = () => {
   const { userId } = useParams(); // Pobieramy ID użytkownika z URL
@@ -15,7 +16,9 @@ const EditUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`/api/users/${userId}/`);
+        const response = await axios.get(
+          `http://localhost:8000/api/users/${userId}/`
+        );
         setFormData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);

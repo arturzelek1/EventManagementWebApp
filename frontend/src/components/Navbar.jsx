@@ -1,22 +1,52 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-//import "./App.css"; // Importuj własne style CSS
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import "../styles/Navbar.css";
+import "../styles/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Cookies from "js-cookie";
 
 function Navbar() {
   const [user, setUser] = useState(null);
+  const csrfToken = Cookies.get("csrftoken");
+  const navigate = useNavigate();
 
-  // Fetchowanie danych użytkownika z API przy użyciu axios
-  useEffect(() => {
+  const handleLogout = () => {
     axios
-      .get("/api/users/")
-      .then((response) => {
-        setUser(response.data); // Zakładamy, że API zwraca obiekt użytkownika
+      .post("http://localhost:8000/api/logout/", {}, { withCredentials: true })
+      .then(() => {
+        setUser(null);
+        navigate("/"); // Przekierowanie za pomocą React Router
       })
       .catch((error) => {
-        console.error("Error fetching user data:", error);
+        console.error("Error logging out:", error);
       });
-  }, []); // Pusta lista zależności oznacza, że efekt zostanie wykonany tylko raz po zamontowaniu komponentu
+  };
+
+  useEffect(() => {
+    if (!csrfToken) {
+      console.error("CSRF token not found");
+      return;
+    }
+
+    axios
+      .get("http://localhost:8000/api/user/", {
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("User data received:", response.data);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error(
+          "Error fetching user data:",
+          error.response ? error.response.data : error.message
+        );
+      });
+  }, [csrfToken]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -73,9 +103,9 @@ function Navbar() {
           <ul className="navbar-nav ml-2">
             {user?.isAuthenticated ? (
               <li className="nav-item">
-                <Link className="nav-link" to="/logout">
+                <button className="nav-link" onClick={handleLogout}>
                   Logout
-                </Link>
+                </button>
               </li>
             ) : (
               <>

@@ -73,6 +73,26 @@ class UserLogin(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# * Details about logged user
+class UserDetail(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        # * Events registered
+        registered_events = Event_Registration.objects.filter(user_ID=user).values_list(
+            "event_ID", flat=True
+        )
+
+        user_data = {
+            "username": user.username,
+            "isAuthenticated": True,
+            "isStaff": user.is_staff,
+            "registered_events": list(registered_events),
+        }
+        return Response(user_data, status=status.HTTP_200_OK)
+
+
 # * User logout API view
 class UserLogout(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -89,7 +109,7 @@ class UserLogout(APIView):
 
 # * User API view
 class UserView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)
 
     def get(self, request, pk=None):
@@ -185,18 +205,20 @@ class EventListView(APIView):
 class JoinEventView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request, pk):
-        event = get_object_or_404(Event, pk=pk)
+    def post(self, request, event_id):
+        # Use 'event_ID' to query the Event model
+        event = get_object_or_404(Event, event_ID=event_id)
+        # Ensure the field names are correctly used
         if not Event_Registration.objects.filter(
             event_ID=event, user_ID=request.user
         ).exists():
             Event_Registration.objects.create(event_ID=event, user_ID=request.user)
             return Response(
-                {"message": "You have been signed up for the event: {event.title}"},
+                {"message": f"You have been signed up for the event: {event.title}"},
                 status=status.HTTP_200_OK,
             )
         return Response(
-            {"message": "You have already signed up for the event: {event.title}"},
+            {"message": f"You have already signed up for the event: {event.title}"},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -205,13 +227,15 @@ class JoinEventView(APIView):
 class LeaveEventView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request, pk):
-        event = get_object_or_404(Event, pk=pk)
+    def post(self, request, event_id):
+        # Use 'event_ID' to query the Event model
+        event = get_object_or_404(Event, event_ID=event_id)
+        # Ensure the field names are correctly used
         registration = get_object_or_404(
             Event_Registration, event_ID=event, user_ID=request.user
         )
         registration.delete()
         return Response(
-            {"message": "You have been written out of the event: {event.title}"},
+            {"message": f"You have been written out of the event: {event.title}"},
             status=status.HTTP_200_OK,
         )
