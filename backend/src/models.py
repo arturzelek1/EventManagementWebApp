@@ -71,7 +71,7 @@ class Event(models.Model):
         max_length=10, choices=[(status.value, status.name) for status in EventStatus]
     )
     organizer_ID = models.ForeignKey(User, on_delete=models.CASCADE, to_field="user_ID")
-    image = models.ImageField(upload_to="events/", null=True, blank=True)
+    image = models.CharField(max_length=2048)
     parent_event_ID = models.ForeignKey(
         "self", on_delete=models.CASCADE, to_field="event_ID", null=True, blank=True
     )

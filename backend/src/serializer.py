@@ -81,6 +81,7 @@ class EventSerializer(serializers.ModelSerializer):
             "organizer_ID",
             "parent_event_ID",
             "status",
+            "image",
         ]
 
 

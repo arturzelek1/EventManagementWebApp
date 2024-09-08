@@ -1,3 +1,10 @@
+/* Kontener dla kart */
+.card-container {
+  display: grid; /* Ustawia kontener na układ siatki */
+  grid-template-columns: repeat(5, 1fr); /* Definiuje 5 kolumn o równej szerokości */
+  gap: 1rem; /* Dodaje odstępy między kartami */
+}
+
 .card-link {
   text-decoration: none; /* Usuwa podkreślenie linków */
   color: inherit; /* Dziedziczy kolor tekstu z rodzica (karty) */
@@ -12,11 +19,11 @@
 
 /* Ogólne style karty */
 .card {
-  display: flex;
-  flex-direction: column;
+  display: flex; /* Używa Flexbox wewnątrz karty */
+  flex-direction: column; /* Ustawia kierunek elementów na kolumnowy */
   justify-content: space-between; /* Rozkłada treść równomiernie */
-  height: 100%;
-  transition: transform 0.3s ease; /* Wysokość karty */
+  height: 100%; /* Ustawia wysokość karty na 100% dostępnej przestrzeni */
+  transition: transform 0.3s ease; /* Dodaje płynne przejście przy transformacji */
   cursor: pointer; /* Zmienia kursor na wskaźnik po najechaniu */
   text-decoration: none; /* Usuwa podkreślenie na całej karcie */
   color: inherit; /* Dziedziczy kolor tekstu z rodzica (karty) */
@@ -32,18 +39,18 @@
 
 .card-img-top {
   transition: transform 0.3s ease; /* Dodaje płynne przejście dla obrazka */
-  width: 100%;
-  height: 200px; /* Ustaw stałą wysokość dla obrazków */
-  object-fit: cover; /* Utrzymuje proporcje obrazu i przycina nadmiar, aby wypełnić kontener */
-  display: block; /* Usuń ewentualne białe marginesy wokół obrazków */
+  width: 100%; /* Ustawia szerokość obrazka na 100% karty */
+  height: 400px; /* Ustawia stałą wysokość dla obrazków */
+  object-fit: cover; /* Utrzymuje proporcje obrazu i przycina nadmiar */
+  display: block; /* Usuwa ewentualne białe marginesy wokół obrazków */
 }
 
 .card-text {
   display: -webkit-box; /* Umożliwia użycie -webkit-line-clamp */
-  -webkit-line-clamp: 3; /* Ogranicza do 3 linii */
+  -webkit-line-clamp: 2; /* Ogranicza tekst do 2 linii */
   -webkit-box-orient: vertical; /* Ustawia orientację na pionową */
   overflow: hidden; /* Ukrywa nadmiar tekstu */
-  text-overflow: ellipsis; /* Dodaje wielokropek */
+  text-overflow: ellipsis; /* Dodaje wielokropek na końcu tekstu */
 }
 
 /* Specyficzne style dla karty wydarzenia w szczegółach */
@@ -53,7 +60,7 @@
   border-radius: 0.25rem; /* Zaokrąglenie rogów karty */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Delikatny cień wokół karty */
   transition: none !important; /* Usunięcie efektu powiększenia */
-  cursor: default; /* Ustaw kursor na domyślny */
+  cursor: default; /* Ustawia kursor na domyślny */
 }
 
 .event-card img {
@@ -67,20 +74,21 @@
 
 .event-card:hover {
   transform: none !important; /* Zapewnia brak efektu powiększenia */
-  cursor: default; /* Ustaw kursor na domyślny */
+  cursor: default; /* Ustawia kursor na domyślny */
 }
+
 .event-thumbnail {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px;
+  width: 50px; /* Szerokość miniatury wydarzenia */
+  height: 50px; /* Wysokość miniatury wydarzenia */
+  object-fit: cover; /* Dopasowanie obrazu w kontenerze */
+  border-radius: 4px; /* Zaokrąglenie rogów miniatury */
 }
 
 .table-responsive {
-  overflow-x: auto;
+  overflow-x: auto; /* Dodaje przewijanie w poziomie dla tabel */
 }
 
 .table th,
 .table td {
-  vertical-align: middle;
+  vertical-align: middle; /* Wyrównuje tekst w komórkach tabeli do środka w pionie */
 }

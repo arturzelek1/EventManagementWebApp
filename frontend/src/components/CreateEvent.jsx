@@ -16,7 +16,7 @@ const CreateEvent = () => {
     location: "",
     status: "",
     organizer_ID: "",
-    image: null,
+    image: "",  // Teraz będzie przechowywać link do obrazka
     parent_event_ID: "",
   });
 
@@ -31,27 +31,12 @@ const CreateEvent = () => {
     });
   };
 
-  // Funkcja obsługująca zmianę pliku w polu typu file
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      image: e.target.files[0],
-    });
-  };
-
   // Funkcja obsługująca przesyłanie formularza
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formToSubmit = new FormData();
-    for (const key in formData) {
-      if (formData[key] !== null) {
-        formToSubmit.append(key, formData[key]);
-      }
-    }
-
     try {
-      await axios.post("http://localhost:8000/api/events/", formToSubmit, {
+      await axios.post("http://localhost:8000/api/events/", formData, {
         headers: {
           "X-CSRFToken": csrfToken,
         },
@@ -71,7 +56,7 @@ const CreateEvent = () => {
     <div className="container mt-4">
       <h1>Create Event</h1>
       {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="title">Title:</label>
           <input
@@ -177,13 +162,15 @@ const CreateEvent = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="image">Image:</label>
+          <label htmlFor="image">Image URL:</label>  {/* Zmiana etykiety */}
           <input
-            type="file"
-            className="form-control-file"
+            type="text"
+            className="form-control"
             id="image"
             name="image"
-            onChange={handleFileChange}
+            value={formData.image}
+            onChange={handleChange}  // Zmieniono obsługę na zwykły input text
+            required
           />
         </div>
 
