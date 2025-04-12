@@ -59,8 +59,15 @@ $ yarn dev
 ```
 ## 📁 Project Structure
 
+```plaintext
 EventManagementWebApp/
-├── backend/      # Server-side logic, API, data handling
-├── frontend/     # User interface and UI components
-├── README.md     # Project documentation
-└── LICENSE       # MIT License
+├── backend/       # Server-side logic, API endpoints, data models
+│   ├── app.py     # Main application file
+│   └── ...        # Other backend scripts and modules
+├── frontend/      # Frontend interface and static files
+│   ├── index.html # Main HTML file
+│   ├── styles/    # CSS styles
+│   ├── scripts/   # JavaScript files
+│   └── ...        # Other frontend components
+├── README.md      # Project documentation (you’re reading it!)
+└── LICENSE        # Project license (MIT)
